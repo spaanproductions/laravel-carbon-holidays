@@ -1,10 +1,11 @@
-# Very short description of the package
+# Carbon isHoliday() function to check if the current date is a Holiday
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spaanproductions/laravel-carbon-holidays.svg?style=flat-square)](https://packagist.org/packages/spaanproductions/laravel-carbon-holidays)
 [![Total Downloads](https://img.shields.io/packagist/dt/spaanproductions/laravel-carbon-holidays.svg?style=flat-square)](https://packagist.org/packages/spaanproductions/laravel-carbon-holidays)
 ![GitHub Actions](https://github.com/spaanproductions/laravel-carbon-holidays/actions/workflows/main.yml/badge.svg)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+This package can be used to add the isHoliday() function to carbon. 
+This only checks the **Dutch** holidays at the moment.
 
 ## Installation
 
@@ -14,10 +15,16 @@ You can install the package via composer:
 composer require spaanproductions/laravel-carbon-holidays
 ```
 
+It will auto discover in Laravel. 
+
 ## Usage
 
 ```php
-// Usage description here
+use \Carbon\Carbon;
+
+// NewYear
+$date = Carbon::createFromDate(2021, 01, 01);
+$date->isHoliday(); // true
 ```
 
 ### Testing
