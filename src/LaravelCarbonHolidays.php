@@ -29,6 +29,7 @@ class LaravelCarbonHolidays
 			$easter        = Carbon::createFromDate($year, 03, 21)->addDays(easter_days($year));
 			$royalDay      = Carbon::createFromDate($year, 04, 27);
 			$liberationDay = Carbon::createFromDate($year, 05, 05);
+			$goodFriday    = $easter->clone()->subDays(2);
 			$ascension     = $easter->clone()->addDays(39);
 			$pentecost     = $easter->clone()->addDays(49);
 			$christmas     = Carbon::createFromDate($year, 12, 25);
@@ -39,6 +40,11 @@ class LaravelCarbonHolidays
 
 			// 'new-year' => '01/01', // Nieuwjaarsdag
 			if ($this->isSameDay($newYear)) {
+				return true;
+			}
+
+			// Goede Vrijdag (= pasen - 2)
+			if ($this->isSameDay($goodFriday)) {
 				return true;
 			}
 
@@ -58,7 +64,7 @@ class LaravelCarbonHolidays
 			}
 
 			// 'liberation-day' => '= 05-05 every 5 years since 1945',
-			if ($this->isSameDay($liberationDay) && $year % 5 === 0) {
+			if ($this->isSameDay($liberationDay)) {
 				return true;
 			}
 

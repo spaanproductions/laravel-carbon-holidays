@@ -5,7 +5,7 @@
 ![GitHub Actions](https://github.com/spaanproductions/laravel-carbon-holidays/actions/workflows/main.yml/badge.svg)
 
 This package can be used to add the isHoliday() function to [Carbon](https://github.com/briannesbitt/carbon). 
-This only checks the **Dutch** holidays at the moment.
+This only checks the **Dutch** holidays at the moment. We will only check if it's a holiday, not if it's a mandatory free day. 
 
 ## Installation
 
