@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/spaanproductions/laravel-carbon-holidays.svg?style=flat-square)](https://packagist.org/packages/spaanproductions/laravel-carbon-holidays)
 ![GitHub Actions](https://github.com/spaanproductions/laravel-carbon-holidays/actions/workflows/main.yml/badge.svg)
 
-This package can be used to add the isHoliday() function to carbon. 
+This package can be used to add the isHoliday() function to [Carbon](https://github.com/briannesbitt/carbon). 
 This only checks the **Dutch** holidays at the moment.
 
 ## Installation
