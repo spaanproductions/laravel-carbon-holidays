@@ -46,10 +46,7 @@
 		"laravel": {
 			"providers": [
 				"SpaanProductions\\LaravelCarbonHolidays\\LaravelCarbonHolidaysServiceProvider"
-			],
-			"aliases": {
-				"LaravelCarbonHolidays": "SpaanProductions\\LaravelCarbonHolidays\\LaravelCarbonHolidaysFacade"
-			}
+			]
 		}
 	}
 }
