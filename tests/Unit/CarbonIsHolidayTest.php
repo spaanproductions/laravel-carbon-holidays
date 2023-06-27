@@ -17,7 +17,7 @@ class CarbonIsHolidayTest extends TestCase
 		self::assertTrue($date->isHoliday());
 	}
 
-	public function holidays()
+	public static function holidays()
 	{
 		return [
 			[Carbon::parse('2021-01-01')], // Nieuwjaarsdag 2021
