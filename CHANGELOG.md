@@ -11,7 +11,7 @@ All notable changes to `laravel-carbon-holidays` will be documented in this file
 - Goede vrijdag toegevoegd
 - Bevreidingsdag (5 mei) is altijd een feestdag (niet altijd vrij)
 
-## 2.0.0 - 2023-06-27
+## 3.0.0 - 2023-06-27
 
 - Remove Laravel 9.x support
 - Remove PHP 8.0.x support
