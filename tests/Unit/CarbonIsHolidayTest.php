@@ -3,21 +3,20 @@
 namespace SpaanProductions\LaravelCarbonHolidays\Tests\Unit;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SpaanProductions\LaravelCarbonHolidays\Tests\TestCase;
 
 class CarbonIsHolidayTest extends TestCase
 {
-	/**
-	 * @test
-	 * @dataProvider holidays
-	 * @param Carbon $date
-	 */
-	public function we_can_check_the_holidays(Carbon $date)
+	#[Test]
+	#[DataProvider('holidays')]
+	public function we_can_check_the_holidays(Carbon $date): void
 	{
 		self::assertTrue($date->isHoliday());
 	}
 
-	public static function holidays()
+	public static function holidays(): array
 	{
 		return [
 			[Carbon::parse('2021-01-01')], // Nieuwjaarsdag 2021
