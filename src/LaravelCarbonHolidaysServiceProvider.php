@@ -3,6 +3,7 @@
 namespace SpaanProductions\LaravelCarbonHolidays;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelCarbonHolidaysServiceProvider extends ServiceProvider
@@ -13,6 +14,7 @@ class LaravelCarbonHolidaysServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		Carbon::mixin(new LaravelCarbonHolidays);
+		CarbonImmutable::mixin(new LaravelCarbonHolidays);
 	}
 
 	/**
