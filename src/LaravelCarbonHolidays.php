@@ -3,6 +3,7 @@
 namespace SpaanProductions\LaravelCarbonHolidays;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 class LaravelCarbonHolidays
 {
@@ -22,7 +23,7 @@ class LaravelCarbonHolidays
 		 */
 
 		return function () {
-			/** @var Carbon $this */
+			/** @var Carbon|CarbonImmutable $this */
 			$year = $this->year;
 
 			$newYear       = Carbon::createFromDate($year, 01, 01);
