@@ -7,94 +7,243 @@ use Carbon\CarbonImmutable;
 
 class LaravelCarbonHolidays
 {
-	public function isHoliday()
+	protected array $config;
+
+	public function __construct(array $config = [])
 	{
-		/**
-		 * 'new-year'           => '01/01', // Nieuwjaarsdag
-		 * 'easter'             => '= easter', // Paaszondag
-		 * 'easter-monday'      => '= easter + 1', // Paasmaandag
-		 * 'royal-day'          => '= 04-27 if Sunday then -1 day', // Koningsdag
-		 * 'liberation-day'     => '= 05-05 every 5 years since 1945', // Bevrijdingsdag
-		 * 'ascension'          => '= easter + 39', // Hemelvaart
-		 * 'pentecost'          => '= easter + 49', // Pinksterzondag
-		 * 'pentecost-monday'   => '= easter + 50', // Pinkstermaandag
-		 * 'christmas'          => '25/12', // Eerste Kerstdag
-		 * 'christmas-next-day' => '26/12', // Tweede Kerstdag
-		 */
+		// Default all holidays to enabled if not specified
+		$this->config = array_merge([
+			'new_year' => true,
+			'good_friday' => true,
+			'easter_sunday' => true,
+			'easter_monday' => true,
+			'kings_day' => true,
+			'liberation_day' => true,
+			'ascension_day' => true,
+			'pentecost' => true,
+			'pentecost_monday' => true,
+			'christmas_day' => true,
+			'boxing_day' => true,
+		], $config);
+	}
 
-		return function () {
+	// English Methods (Primary)
+
+	public function isNewYear(): \Closure
+	{
+		return function (): bool {
 			/** @var Carbon|CarbonImmutable $this */
-			$year = $this->year;
+			$newYear = Carbon::createFromDate($this->year, 01, 01);
+			return $this->isSameDay($newYear);
+		};
+	}
 
-			$newYear       = Carbon::createFromDate($year, 01, 01);
-			$easter        = Carbon::createFromDate($year, 03, 21)->addDays(easter_days($year));
-			$royalDay      = Carbon::createFromDate($year, 04, 27);
-			$liberationDay = Carbon::createFromDate($year, 05, 05);
-			$goodFriday    = $easter->clone()->subDays(2);
-			$ascension     = $easter->clone()->addDays(39);
-			$pentecost     = $easter->clone()->addDays(49);
-			$christmas     = Carbon::createFromDate($year, 12, 25);
+	public function isGoodFriday(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$easter = Carbon::createFromDate($this->year, 03, 21)->addDays(easter_days($this->year));
+			$goodFriday = $easter->clone()->subDays(2);
+			return $this->isSameDay($goodFriday);
+		};
+	}
 
-			if ($royalDay->isSunday()) {
-				$royalDay->subDay();
+	public function isEasterSunday(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$easter = Carbon::createFromDate($this->year, 03, 21)->addDays(easter_days($this->year));
+			return $this->isSameDay($easter);
+		};
+	}
+
+	public function isEasterMonday(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$easter = Carbon::createFromDate($this->year, 03, 21)->addDays(easter_days($this->year));
+			$easterMonday = $easter->clone()->addDay();
+			return $this->isSameDay($easterMonday);
+		};
+	}
+
+	public function isKingsDay(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$kingsDay = Carbon::createFromDate($this->year, 04, 27);
+			if ($kingsDay->isSunday()) {
+				$kingsDay->subDay();
 			}
+			return $this->isSameDay($kingsDay);
+		};
+	}
 
-			// 'new-year' => '01/01', // Nieuwjaarsdag
-			if ($this->isSameDay($newYear)) {
-				return true;
-			}
+	public function isLiberationDay(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$liberationDay = Carbon::createFromDate($this->year, 05, 05);
+			return $this->isSameDay($liberationDay);
+		};
+	}
 
-			// Goede Vrijdag (= pasen - 2)
-			if ($this->isSameDay($goodFriday)) {
-				return true;
-			}
+	public function isLiberationDayYear(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			// Liberation Day is celebrated every 5 years: 1945, 1950, 1955... 2020, 2025, 2030
+			// Years divisible by 5
+			return $this->year % 5 === 0;
+		};
+	}
 
-			// 'easter' => '= easter',
-			if ($this->isSameDay($easter)) {
-				return true;
-			}
+	public function isAscensionDay(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$easter = Carbon::createFromDate($this->year, 03, 21)->addDays(easter_days($this->year));
+			$ascension = $easter->clone()->addDays(39);
+			return $this->isSameDay($ascension);
+		};
+	}
 
-			// 'easter-monday' => '= easter + 1',
-			if ($this->isSameDay($easter->clone()->addDay())) {
-				return true;
-			}
+	public function isPentecost(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$easter = Carbon::createFromDate($this->year, 03, 21)->addDays(easter_days($this->year));
+			$pentecost = $easter->clone()->addDays(49);
+			return $this->isSameDay($pentecost);
+		};
+	}
 
-			// 'royal-day' => '= 04-27 if Sunday then -1 day',
-			if ($this->isSameDay($royalDay)) {
-				return true;
-			}
+	public function isPentecostMonday(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$easter = Carbon::createFromDate($this->year, 03, 21)->addDays(easter_days($this->year));
+			$pentecostMonday = $easter->clone()->addDays(50);
+			return $this->isSameDay($pentecostMonday);
+		};
+	}
 
-			// 'liberation-day' => '= 05-05 every 5 years since 1945',
-			if ($this->isSameDay($liberationDay)) {
-				return true;
-			}
+	public function isChristmasDay(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$christmas = Carbon::createFromDate($this->year, 12, 25);
+			return $this->isSameDay($christmas);
+		};
+	}
 
-			// 'ascension' => '= easter + 39',
-			if ($this->isSameDay($ascension)) {
-				return true;
-			}
+	public function isBoxingDay(): \Closure
+	{
+		return function (): bool {
+			/** @var Carbon|CarbonImmutable $this */
+			$boxingDay = Carbon::createFromDate($this->year, 12, 26);
+			return $this->isSameDay($boxingDay);
+		};
+	}
 
-			// 'pentecost' => '= easter + 49',
-			if ($this->isSameDay($pentecost)) {
-				return true;
-			}
+	// Dutch Methods (Aliases)
 
-			// 'pentecost-monday' => '= easter + 50',
-			if ($this->isSameDay($pentecost->clone()->addDay())) {
-				return true;
-			}
+	public function isNieuwjaarsdag(): \Closure
+	{
+		return $this->isNewYear();
+	}
 
-			// 'christmas' => '25/12', // Eerste Kerstdag
-			if ($this->isSameDay($christmas)) {
-				return true;
-			}
+	public function isGoedeVrijdag(): \Closure
+	{
+		return $this->isGoodFriday();
+	}
 
-			// 'christmas-next-day' => '26/12', // Tweede Kerstdag
-			if ($this->isSameDay($christmas->clone()->addDay())) {
-				return true;
-			}
+	public function isPaaszondag(): \Closure
+	{
+		return $this->isEasterSunday();
+	}
 
-			return false;
+	public function isPaasmaandag(): \Closure
+	{
+		return $this->isEasterMonday();
+	}
+
+	public function isKoningsdag(): \Closure
+	{
+		return $this->isKingsDay();
+	}
+
+	public function isBevrijdingsdag(): \Closure
+	{
+		return $this->isLiberationDay();
+	}
+
+	public function isHemelvaart(): \Closure
+	{
+		return $this->isAscensionDay();
+	}
+
+	public function isPinksterzondag(): \Closure
+	{
+		return $this->isPentecost();
+	}
+
+	public function isPinkstermaandag(): \Closure
+	{
+		return $this->isPentecostMonday();
+	}
+
+	public function isEersteKerstdag(): \Closure
+	{
+		return $this->isChristmasDay();
+	}
+
+	public function isTweedeKerstdag(): \Closure
+	{
+		return $this->isBoxingDay();
+	}
+
+	// Additional Aliases
+
+	public function isWhitsunday(): \Closure
+	{
+		return $this->isPentecost();
+	}
+
+	public function isWhitMonday(): \Closure
+	{
+		return $this->isPentecostMonday();
+	}
+
+	public function isHemelvaartsdag(): \Closure
+	{
+		return $this->isHemelvaart();
+	}
+
+	// General Holiday Check (Refactored)
+
+	public function isHoliday(): \Closure
+	{
+		$config = $this->config; // Capture config for closure
+
+		return function () use ($config) {
+			/** @var Carbon|CarbonImmutable $this */
+
+			return match (true) {
+				$this->isNewYear() => ($config['new_year'] ?? true),
+				$this->isGoodFriday() => ($config['good_friday'] ?? true),
+				$this->isEasterSunday() => ($config['easter_sunday'] ?? true),
+				$this->isEasterMonday() => ($config['easter_monday'] ?? true),
+				$this->isKingsDay() => ($config['kings_day'] ?? true),
+				$this->isLiberationDay() && $this->isLiberationDayYear() => ($config['liberation_day'] ?? true) === 'once-every-5-years' || ($config['liberation_day'] ?? true) === true,
+				$this->isLiberationDay() => ($config['liberation_day'] ?? true) === true,
+				$this->isAscensionDay() => ($config['ascension_day'] ?? true),
+				$this->isPentecost() => ($config['pentecost'] ?? true),
+				$this->isPentecostMonday() => ($config['pentecost_monday'] ?? true),
+				$this->isChristmasDay() => ($config['christmas_day'] ?? true),
+				$this->isBoxingDay() => ($config['boxing_day'] ?? true),
+				default => false,
+			};
 		};
 	}
 }
