@@ -2,6 +2,13 @@
 
 All notable changes to `laravel-carbon-holidays` will be documented in this file
 
+## 4.0.0 - 2026-07-23
+
+- Add Laravel 13.x support
+- Add Orchestra Testbench 11.x support
+- Add PHPUnit 13.x support
+- Drop PHP 8.0, 8.1 and 8.2 support (minimum PHP is now 8.3)
+
 ## 3.0.6 - 2026-02-15
 
 - Add configurable holidays with individual check methods

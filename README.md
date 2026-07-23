@@ -7,6 +7,13 @@
 This package can be used to add the isHoliday() function to [Carbon](https://github.com/briannesbitt/carbon). 
 This only checks the **Dutch** holidays at the moment. We will only check if it's a holiday, not if it's a mandatory free day. 
 
+## Supported Versions
+
+| Package | PHP       | Laravel                |
+|---------|-----------|------------------------|
+| 4.x     | 8.3 – 8.5 | 10.x, 11.x, 12.x, 13.x |
+| 3.x     | 8.1 – 8.5 | 10.x, 11.x, 12.x       |
+
 ## Installation
 
 You can install the package via composer:
